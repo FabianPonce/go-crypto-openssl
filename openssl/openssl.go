@@ -1,8 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-//go:build linux && !android
-// +build linux,!android
+//go:build darwin || (linux && !android)
 
 // Package openssl provides access to OpenSSL cryptographic functions.
 package openssl
@@ -14,6 +13,7 @@ import "C"
 import (
 	"errors"
 	"math/bits"
+	"runtime"
 	"strconv"
 	"strings"
 	"sync"
@@ -109,6 +109,9 @@ func Init() error {
 
 func dlopen(version string) unsafe.Pointer {
 	cv := C.CString("libcrypto.so." + version)
+	if runtime.GOOS == "darwin" {
+		cv = C.CString("libcrypto." + version + ".dylib")
+	}
 	defer C.free(unsafe.Pointer(cv))
 	return C.dlopen(cv, C.RTLD_LAZY|C.RTLD_LOCAL)
 }

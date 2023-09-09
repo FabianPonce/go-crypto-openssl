@@ -1,8 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-//go:build linux && !android
-// +build linux,!android
+//go:build darwin || (linux && !android)
 
 #include "goopenssl.h"
 

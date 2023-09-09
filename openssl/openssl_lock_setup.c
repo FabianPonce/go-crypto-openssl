@@ -1,8 +1,7 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-//go:build linux && !android
-// +build linux,!android
+//go:build darwin || (linux && !android)
 
 #include "goopenssl.h"
 
@@ -35,7 +34,13 @@ static void locking_function(int mode, int n, const char *file, int line)
  
 static unsigned long id_function(void)
 {
+#if defined(__APPLE__)
+    uint64_t tid;
+     pthread_threadid_np(NULL, &tid);
+     return (unsigned long)tid;
+#else
 	return ((unsigned long)syscall(__NR_gettid));
+#endif
 }
  
 int go_openssl_thread_setup(void)

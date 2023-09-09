@@ -1,8 +1,8 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License.
 
-//go:build linux && !android
-// +build linux,!android
+//go:build darwin || (linux && !android)
+// +build darwin linux,!android
 
 package misc
 
